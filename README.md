@@ -1,17 +1,30 @@
-# uni_project1
+# Currency Hub
 
-A new Flutter project.
+## Project Idea
+Currency Hub is a modern Flutter mobile application that consumes a real public Currency Exchange API and displays exchange rates in a professional, responsive UI.
 
-## Getting Started
+## Features
+- Real-time exchange rates.
+- Full text search for currencies.
+- Detailed currency info and conversion.
+- Favorites system with local storage (SharedPreferences).
+- Dark Mode support.
+- Multilingual support (English and Arabic).
+- Modern UI using Material Design 3 and animations.
 
-This project is a starting point for a Flutter application.
+## Packages Used
+- `http`: For API requests.
+- `provider`: For State Management.
+- `easy_localization`: For multilingual support.
+- `shared_preferences`: For local storage of settings and favorites.
+- `flutter_animate`: For UI animations.
+- `cupertino_icons`: Standard icon package.
 
-A few resources to get you started if this is your first Flutter project:
+## Team Member Responsibilities
+- **Member 1**: API Integration (`api_service.dart`) & Models (`currency.dart`).
+- **Member 2**: Home Screen (`home_screen.dart`, `main_screen.dart`) & Details Screen (`details_screen.dart`).
+- **Member 3**: Favorites Feature (`favorites_screen.dart`, `favorites_provider.dart`).
+- **Member 4**: Settings (`settings_screen.dart`), Localization (`en.json`, `ar.json`), & Dark Mode (`theme_provider.dart`).
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## API Source
+Exchange rates provided by [Exchange Rate API](https://open.er-api.com/).
