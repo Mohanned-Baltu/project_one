@@ -44,20 +44,47 @@ class FavoritesScreen extends StatelessWidget {
             );
           }
 
-          return ListView.builder(
-            padding: EdgeInsets.all(16),
-            itemCount: favProvider.favorites.length,
-            itemBuilder: (context, index) {
-              final favorite = favProvider.favorites[index];
-              // Try to get updated rate if available
-              final updatedCurrency = currProvider.currencies.firstWhere(
-                (c) => c.code == favorite.code,
-                orElse: () => favorite,
-              );
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth > 700) {
+                return GridView.builder(
+                  padding: EdgeInsets.all(16),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: constraints.maxWidth > 1000 ? 3 : 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 2.5,
+                  ),
+                  itemCount: favProvider.favorites.length,
+                  itemBuilder: (context, index) {
+                    final favorite = favProvider.favorites[index];
+                    final updatedCurrency = currProvider.currencies.firstWhere(
+                      (c) => c.code == favorite.code,
+                      orElse: () => favorite,
+                    );
+                    return CurrencyCard(
+                      currency: updatedCurrency,
+                      lastUpdate: currProvider.lastUpdate,
+                    );
+                  },
+                );
+              }
+              return ListView.builder(
+                padding: EdgeInsets.all(16),
+                itemCount: favProvider.favorites.length,
+                itemBuilder: (context, index) {
+                  final favorite = favProvider.favorites[index];
+                  // Try to get updated rate if available
+                  final updatedCurrency = currProvider.currencies.firstWhere(
+                    (c) => c.code == favorite.code,
+                    orElse: () => favorite,
+                  );
 
-              return CurrencyCard(
-                currency: updatedCurrency,
-                lastUpdate: currProvider.lastUpdate,
+                  return CurrencyCard(
+                    currency: updatedCurrency,
+                    lastUpdate: currProvider.lastUpdate,
+                  );
+                },
               );
             },
           );

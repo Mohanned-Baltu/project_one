@@ -12,9 +12,12 @@ class SettingsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('settings'.tr()),
       ),
-      body: ListView(
-        children: [
-          Consumer<ThemeProvider>(
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 800),
+          child: ListView(
+            children: [
+              Consumer<ThemeProvider>(
             builder: (context, themeProvider, child) {
               return SwitchListTile(
                 title: Text('dark_mode'.tr()),
@@ -44,12 +47,14 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
           Divider(),
-          ListTile(
-            leading: Icon(Icons.info_outline),
-            title: Text('app_information'.tr()),
-            subtitle: Text('Currency Hub v1.0.0'),
+              ListTile(
+                leading: Icon(Icons.info_outline),
+                title: Text('app_information'.tr()),
+                subtitle: Text('Currency Hub v1.0.0'),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

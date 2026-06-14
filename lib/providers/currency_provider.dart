@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import '../models/currency.dart';
 import '../services/api_service.dart';
+import '../core/exceptions.dart';
 
+/// Manages the state of currencies, handles API requests, and provides search functionality.
 class CurrencyProvider extends ChangeNotifier {
   final ApiService _apiService = ApiService();
 
@@ -22,6 +24,7 @@ class CurrencyProvider extends ChangeNotifier {
     fetchData();
   }
 
+  /// Fetches live exchange rates from the API.
   Future<void> fetchData() async {
     _isLoading = true;
     _error = null;
@@ -29,17 +32,20 @@ class CurrencyProvider extends ChangeNotifier {
 
     try {
       final result = await _apiService.fetchRates();
-      _allCurrencies = result['currencies'];
-      _lastUpdate = result['lastUpdate'];
+      _allCurrencies = result['currencies'] as List<Currency>;
+      _lastUpdate = result['lastUpdate'] as String;
       _filterCurrencies();
+    } on AppExceptions catch (e) {
+      _error = e.message;
     } catch (e) {
-      _error = e.toString();
+      _error = 'An unexpected error occurred.';
     } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
 
+  /// Filters the currency list based on the search query.
   void search(String query) {
     _searchQuery = query;
     _filterCurrencies();

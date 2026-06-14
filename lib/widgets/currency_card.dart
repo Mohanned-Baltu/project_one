@@ -3,8 +3,13 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../models/currency.dart';
 import '../screens/details_screen.dart';
 
+/// A reusable Card widget that displays summarized information for a [Currency].
+/// Tapping on the card navigates to the [DetailsScreen] for that currency.
 class CurrencyCard extends StatelessWidget {
+  /// The currency object to display.
   final Currency currency;
+
+  /// A string representing the last update time of the exchange rate.
   final String lastUpdate;
 
   const CurrencyCard({

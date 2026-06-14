@@ -1,12 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import '../models/currency.dart';
+import '../core/exceptions.dart';
 
+/// Service responsible for fetching currency exchange rates from a public API.
 class ApiService {
-  // Using a free open API for exchange rates. USD is base by default in this API.
   static const String _baseUrl = 'https://open.er-api.com/v6/latest/USD';
 
-  // Fallback map of currency names since API only provides codes.
   static const Map<String, String> _currencyNames = {
     'USD': 'US Dollar',
     'EUR': 'Euro',
@@ -45,34 +46,45 @@ class ApiService {
     'RON': 'Romanian Leu',
   };
 
+  /// Fetches live exchange rates and returns a map containing the list of [Currency] objects and the last update time.
+  /// Throws [NetworkException] if connection fails.
+  /// Throws [ApiException] if server returns an error.
+  /// Throws [ParseException] if JSON parsing fails.
   Future<Map<String, dynamic>> fetchRates() async {
     try {
       final response = await http.get(Uri.parse(_baseUrl));
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
+        try {
+          final data = json.decode(response.body);
 
-        final Map<String, dynamic> ratesJson = data['rates'];
-        final String lastUpdate = data['time_last_update_utc'] ?? '';
+          final Map<String, dynamic> ratesJson = data['rates'] ?? {};
+          final String lastUpdate = data['time_last_update_utc']?.toString() ?? 'Unknown';
 
-        List<Currency> currencies = [];
-        ratesJson.forEach((code, rate) {
-          currencies.add(Currency(
-            code: code,
-            name: _currencyNames[code] ?? code,
-            rate: rate.toDouble(),
-          ));
-        });
+          List<Currency> currencies = [];
+          ratesJson.forEach((code, rate) {
+            currencies.add(Currency(
+              code: code,
+              name: _currencyNames[code] ?? code,
+              rate: (rate is num) ? rate.toDouble() : 0.0,
+            ));
+          });
 
-        return {
-          'currencies': currencies,
-          'lastUpdate': lastUpdate,
-        };
+          return {
+            'currencies': currencies,
+            'lastUpdate': lastUpdate,
+          };
+        } catch (e) {
+          throw ParseException();
+        }
       } else {
-        throw Exception('Failed to load exchange rates');
+        throw ApiException();
       }
+    } on SocketException {
+      throw NetworkException();
     } catch (e) {
-      throw Exception('Network error: $e');
+      if (e is AppExceptions) rethrow;
+      throw NetworkException(e.toString());
     }
   }
 }

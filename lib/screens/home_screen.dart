@@ -68,12 +68,32 @@ class HomeScreen extends StatelessWidget {
   Widget _buildCurrencyList(CurrencyProvider provider) {
     return RefreshIndicator(
       onRefresh: provider.fetchData,
-      child: ListView.builder(
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        itemCount: provider.currencies.length,
-        itemBuilder: (context, index) {
-          final currency = provider.currencies[index];
-          return CurrencyCard(currency: currency, lastUpdate: provider.lastUpdate);
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.maxWidth > 700) {
+            return GridView.builder(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: constraints.maxWidth > 1000 ? 3 : 2,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                childAspectRatio: 2.5,
+              ),
+              itemCount: provider.currencies.length,
+              itemBuilder: (context, index) {
+                final currency = provider.currencies[index];
+                return CurrencyCard(currency: currency, lastUpdate: provider.lastUpdate);
+              },
+            );
+          }
+          return ListView.builder(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            itemCount: provider.currencies.length,
+            itemBuilder: (context, index) {
+              final currency = provider.currencies[index];
+              return CurrencyCard(currency: currency, lastUpdate: provider.lastUpdate);
+            },
+          );
         },
       ),
     );
