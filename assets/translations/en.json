@@ -1,0 +1,23 @@
+{
+  "app_title": "Currency Hub",
+  "home": "Home",
+  "favorites": "Favorites",
+  "settings": "Settings",
+  "search": "Search currencies...",
+  "details": "Details",
+  "exchange_rate": "Exchange Rate",
+  "add_to_favorites": "Add to Favorites",
+  "remove_from_favorites": "Remove from Favorites",
+  "currency_code": "Currency Code",
+  "currency_name": "Currency Name",
+  "last_update": "Last Update",
+  "dark_mode": "Dark Mode",
+  "language": "Language",
+  "app_information": "App Information",
+  "currency_converter": "Currency Converter",
+  "amount": "Amount",
+  "converted_result": "Converted Result",
+  "no_favorites": "No favorites yet.",
+  "error_fetching_data": "Error fetching data.",
+  "pull_to_refresh": "Pull to refresh"
+}

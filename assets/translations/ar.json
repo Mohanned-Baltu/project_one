@@ -1,0 +1,23 @@
+{
+  "app_title": "مركز العملات",
+  "home": "الرئيسية",
+  "favorites": "المفضلة",
+  "settings": "الإعدادات",
+  "search": "البحث عن العملات...",
+  "details": "التفاصيل",
+  "exchange_rate": "سعر الصرف",
+  "add_to_favorites": "إضافة إلى المفضلة",
+  "remove_from_favorites": "إزالة من المفضلة",
+  "currency_code": "رمز العملة",
+  "currency_name": "اسم العملة",
+  "last_update": "آخر تحديث",
+  "dark_mode": "الوضع الداكن",
+  "language": "اللغة",
+  "app_information": "معلومات التطبيق",
+  "currency_converter": "محول العملات",
+  "amount": "المبلغ",
+  "converted_result": "النتيجة",
+  "no_favorites": "لا توجد مفضلة بعد.",
+  "error_fetching_data": "خطأ في جلب البيانات.",
+  "pull_to_refresh": "اسحب للتحديث"
+}

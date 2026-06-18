@@ -1,6 +1,6 @@
 {
-    "name": "uni_project1",
-    "short_name": "uni_project1",
+    "name": "Cookly",
+    "short_name": "Cookly",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
