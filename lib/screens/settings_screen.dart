@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../providers/theme_provider.dart';
+import '../providers/auth_provider.dart';
+import 'auth_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -12,16 +14,13 @@ class SettingsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('settings'.tr()),
       ),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 800),
-          child: ListView(
-            children: [
-              Consumer<ThemeProvider>(
+      body: ListView(
+        children: [
+          Consumer<ThemeProvider>(
             builder: (context, themeProvider, child) {
               return SwitchListTile(
                 title: Text('dark_mode'.tr()),
-                secondary: Icon(themeProvider.isDarkMode ? Icons.dark_mode : Icons.light_mode),
+                secondary: const Icon(Icons.dark_mode),
                 value: themeProvider.isDarkMode,
                 onChanged: (value) {
                   themeProvider.toggleTheme();
@@ -29,32 +28,37 @@ class SettingsScreen extends StatelessWidget {
               );
             },
           ),
-          Divider(),
           ListTile(
-            leading: Icon(Icons.language),
             title: Text('language'.tr()),
+            leading: const Icon(Icons.language),
             trailing: DropdownButton<String>(
               value: context.locale.languageCode,
-              items: [
+              items: const [
                 DropdownMenuItem(value: 'en', child: Text('English')),
                 DropdownMenuItem(value: 'ar', child: Text('العربية')),
               ],
-              onChanged: (String? value) {
+              onChanged: (value) {
                 if (value != null) {
                   context.setLocale(Locale(value));
                 }
               },
             ),
           ),
-          Divider(),
-              ListTile(
-                leading: Icon(Icons.info_outline),
-                title: Text('app_information'.tr()),
-                subtitle: Text('Currency Hub v1.0.0'),
-              ),
-            ],
+          ListTile(
+            title: Text('logout'.tr()),
+            leading: const Icon(Icons.logout, color: Colors.red),
+            textColor: Colors.red,
+            onTap: () async {
+              await context.read<AuthProvider>().logout();
+              if (context.mounted) {
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (_) => const AuthScreen()),
+                  (route) => false,
+                );
+              }
+            },
           ),
-        ),
+        ],
       ),
     );
   }

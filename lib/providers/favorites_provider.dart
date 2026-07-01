@@ -1,62 +1,46 @@
-import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import '../models/currency.dart';
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../models/game.dart';
 
-/// Manages favorite currencies and persists them locally using SharedPreferences.
 class FavoritesProvider extends ChangeNotifier {
-  List<Currency> _favorites = [];
-  final String key = "favorites_list";
-  late SharedPreferences _prefs;
+  static const String _favoritesKey = 'favorite_games';
+  List<Game> _favorites = [];
 
-  List<Currency> get favorites => _favorites;
+  List<Game> get favorites => _favorites;
 
   FavoritesProvider() {
-    _loadFromPrefs();
+    _loadFavorites();
   }
 
-  /// Checks if a given currency code is in the favorites list.
-  bool isFavorite(String code) {
-    return _favorites.any((c) => c.code == code);
-  }
+  Future<void> _loadFavorites() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? favoritesJson = prefs.getString(_favoritesKey);
 
-  /// Adds or removes a currency from the favorites list.
-  void toggleFavorite(Currency currency) {
-    if (isFavorite(currency.code)) {
-      _favorites.removeWhere((c) => c.code == currency.code);
-    } else {
-      _favorites.add(currency);
-    }
-    _saveToPrefs();
-    notifyListeners();
-  }
-
-  Future<void> _initPrefs() async {
-    _prefs = await SharedPreferences.getInstance();
-  }
-
-  Future<void> _loadFromPrefs() async {
-    await _initPrefs();
-    String? favString = _prefs.getString(key);
-    if (favString != null) {
-      try {
-        List<dynamic> jsonList = json.decode(favString);
-        _favorites = jsonList.map((j) {
-          if (j is Map<String, dynamic>) {
-            return Currency.fromCacheJson(j);
-          }
-          return null;
-        }).where((c) => c != null).cast<Currency>().toList();
-      } catch (e) {
-        _favorites = [];
-      }
+    if (favoritesJson != null) {
+      final List<dynamic> decodedList = json.decode(favoritesJson);
+      _favorites = decodedList.map((json) => Game.fromJson(json)).toList();
       notifyListeners();
     }
   }
 
-  Future<void> _saveToPrefs() async {
-    await _initPrefs();
-    List<Map<String, dynamic>> jsonList = _favorites.map((c) => c.toJson()).toList();
-    _prefs.setString(key, json.encode(jsonList));
+  Future<void> _saveFavorites() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String encodedList = json.encode(_favorites.map((game) => game.toJson()).toList());
+    await prefs.setString(_favoritesKey, encodedList);
+  }
+
+  bool isFavorite(int id) {
+    return _favorites.any((game) => game.id == id);
+  }
+
+  void toggleFavorite(Game game) {
+    if (isFavorite(game.id)) {
+      _favorites.removeWhere((g) => g.id == game.id);
+    } else {
+      _favorites.add(game);
+    }
+    _saveFavorites();
+    notifyListeners();
   }
 }
